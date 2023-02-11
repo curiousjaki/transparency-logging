@@ -1,0 +1,7 @@
+FROM python:3-alpine
+WORKDIR /usr/src/app
+COPY requirements.txt ./
+#RUN apk update && apk upgrade && apk add bash && apk add curl
+RUN pip install --no-cache-dir -r requirements.txt
+COPY ./app .
+CMD ["waitress-serve","--host","0.0.0.0","main:app"]
