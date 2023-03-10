@@ -1,0 +1,22 @@
+Metadata-Version: 2.1
+Name: process-tilt-ciphersmaug
+Version: 0.0.1
+Summary: A small example package
+Author: jaki
+Project-URL: Homepage, https://github.com/ciphersmaug
+Project-URL: Bug Tracker, https://github.com/ciphersmaug
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# transparency-logging
+```
+podman build -t tilt-frontend ./src/frontend/
+podman run -d -p 8080:8080 --name my-container localhost/tilt-frontend:latest 
+podman container rm my-container
+
+podman exec -it my-container /bin/bash
+```
