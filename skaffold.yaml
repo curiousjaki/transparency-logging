@@ -1,0 +1,18 @@
+apiVersion: skaffold/v4beta2
+kind: Config
+metadata:
+  name: transparency-logging
+build:
+  artifacts:
+  - image: docker.io/ciphersmaug/tilt-frontend
+    context: src/frontend
+    docker:
+      dockerfile: Dockerfile
+  - image: docker.io/ciphersmaug/tilt-user
+    context: src/user
+    docker:
+      dockerfile: Dockerfile
+manifests:
+  rawYaml:
+  - deployment.yaml
+  - manifests/*

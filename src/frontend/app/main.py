@@ -1,32 +1,48 @@
 from flask import Flask
 from waitress import serve
 from lorem_text import lorem
-from tilt.logging import TiltLogger
-#from tilt.pellucid import Pellucid
+from process_tilt_ciphersmaug.logging import TiltLogger
+import opentelemetry.instrumentation.requests
+import concurrent.futures
+import datetime
+import requests
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+from opentelemetry import trace
+
 
 app = Flask(__name__)
 
+RequestsInstrumentor().instrument()
+
+
+# Acquire a tracer
+tracer = trace.get_tracer(__name__)
 # Create the tilt Logger
-tl = TiltLogger("TILT")
+tl = TiltLogger("TILT",tracer)
 
-#pellucid = Pellucid()
-#pellucid.personal_data
-#pellucid.purpose
-#@pellucid.activity_name("Rechnung")
-#@pellucid.data_disclosed(["firstname","name","address","payment_card"])
-#@pellucid.purposes(["Rechnungslegung"])
-#@pellucid.log()
+@app.route('/user/<id>')
+@tl.log(concept_name = "HelloWorld", tilt = {
+    "data_disclosed": ["username"], 
+    "purposes": ["marketing"], 
+    "legal_bases": ["gdpr sec 4."]
+    }, msg = "Getting User Information")
+def user_information(id: int):
+    future_user_info = get_user_information(id)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        #future_user_info = executor.submit(get_user_information, id)
+        future_last_access = executor.submit(get_last_access, id)
+    return future_user_info#.result()|future_last_access.result()
 
+def get_user_information(id):
+    with tracer.start_as_current_span("GetUserInformation") as user_span:
+        response = requests.get("http://user-service/user/1")
+    return response.json()
 
-@app.route('/')
-@tl.log(concept_name = "HelloWorld", tilt = {"data_disclosed":["username"],"purposes":["marketing"],"legal_bases":["gdpr sec 4."]}, msg = "Logging")
-def hello():
-    e = {
-        'id': "MYID",
-        'value': lorem.sentence()
+def get_last_access(id):
+    return {
+        "last_access": datetime.datetime(2010,1,1,1,1)
     }
 
-    return e
-
 if __name__ == "__main__":
-    serve(app, host="0.0.0.0", port=8089)
+    serve(app, host="0.0.0.0", port=8081)
+    #0x3a4eebf6dc087bc65b711b5651d46cb1
