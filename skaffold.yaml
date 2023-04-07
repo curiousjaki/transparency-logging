@@ -14,5 +14,7 @@ build:
       dockerfile: Dockerfile
 manifests:
   rawYaml:
+  #- logging-manifests/*
+  - devopsguyfluentd/*
+  - otel-manifests/*
   - deployment.yaml
-  - manifests/*

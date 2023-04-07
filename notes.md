@@ -62,3 +62,13 @@ spec:
     targetPort: 8080
   selector:
     app: frontend-pod
+
+
+
+<filter **>
+  @type grep
+  <regexp>
+    key tilt
+    pattern /(.*?)/
+  </regexp>
+</filter>

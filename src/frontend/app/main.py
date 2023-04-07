@@ -1,8 +1,6 @@
 from flask import Flask
 from waitress import serve
-from lorem_text import lorem
 from process_tilt_ciphersmaug.logging import TiltLogger
-import opentelemetry.instrumentation.requests
 import concurrent.futures
 import datetime
 import requests
