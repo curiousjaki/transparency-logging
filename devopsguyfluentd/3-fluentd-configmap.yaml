@@ -20,16 +20,16 @@ data:
       exclude_path ["/var/log/containers/fluent*"]
       <parse>
         @type json
-        time_key timestamp
+        time_key time:timestamp
         time_type string
-        time_format %Y-%m-%dT%H:%M:%S.%L
-      </parse>
+        time_format "%Y-%m-%d %H:%M:%S,%3N"
+      </parse> 
     </source>
     <filter tilt.**>
       @type grep
       <regexp>
         key log
-        pattern /\'tilt\':/
+        pattern /\"tilt\":/
       </regexp>
     </filter>
   file-fluent.conf: |-

@@ -1,5 +1,6 @@
 FROM python:3-alpine
 WORKDIR /usr/src/app
+ARG name=defaultValue
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 RUN apk add --update --no-cache curl
