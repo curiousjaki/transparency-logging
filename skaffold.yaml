@@ -12,9 +12,25 @@ build:
     context: src/user
     docker:
       dockerfile: Dockerfile
+  - image: docker.io/ciphersmaug/tilt-address
+    context: src/address
+    docker:
+      dockerfile: Dockerfile
+  - image: docker.io/ciphersmaug/tilt-welcome
+    context: src/welcome
+    docker:
+      dockerfile: Dockerfile
+  - image: docker.io/ciphersmaug/tilt-newsletter
+    context: src/newsletter
+    docker:
+      dockerfile: Dockerfile
+  - image: docker.io/ciphersmaug/tilt-loadgenerator
+    context: src/loadgenerator
+    docker:
+      dockerfile: Dockerfile
 manifests:
   rawYaml:
   #- logging-manifests/*
   - devopsguyfluentd/*
-  - otel-manifests/*
+  #- otel-manifests/*
   - deployment.yaml

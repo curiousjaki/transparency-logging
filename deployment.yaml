@@ -69,3 +69,158 @@ spec:
     targetPort: 8082
   selector:
     app: user-pod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: address-deployment
+  labels:
+    app: address
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: address-pod
+  template:
+    metadata:
+      labels:
+        app: address-pod
+    spec:
+      containers:
+      - name: address-container
+        image: docker.io/ciphersmaug/tilt-address:latest
+        ports:
+        - containerPort: 8083
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: address-service
+  labels:
+    service: address
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8083
+  selector:
+    app: address-pod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: welcome-deployment
+  labels:
+    app: welcome
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: welcome-pod
+  template:
+    metadata:
+      labels:
+        app: welcome-pod
+    spec:
+      containers:
+      - name: welcome-container
+        image: docker.io/ciphersmaug/tilt-welcome:latest
+        ports:
+        - containerPort: 8084
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: welcome-service
+  labels:
+    service: welcome
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8084
+  selector:
+    app: welcome-pod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: newsletter-deployment
+  labels:
+    app: newsletter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: newsletter-pod
+  template:
+    metadata:
+      labels:
+        app: newsletter-pod
+    spec:
+      containers:
+      - name: newsletter-container
+        image: docker.io/ciphersmaug/tilt-newsletter:latest
+        ports:
+        - containerPort: 8085
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: newsletter-service
+  labels:
+    service: newsletter
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8085
+  selector:
+    app: newsletter-pod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadgenerator-deployment
+  labels:
+    app: loadgenerator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loadgenerator-pod
+  template:
+    metadata:
+      labels:
+        app: loadgenerator-pod
+    spec:
+      containers:
+      - name: loadgenerator-container
+        image: docker.io/ciphersmaug/tilt-loadgenerator:latest
+        ports:
+        - containerPort: 8086
+      initContainers:
+      - name: wait-for-frontend
+        image: busybox
+        args:
+        - /bin/sh
+        - -c
+        - >
+          set -x;
+          while [ $(curl -sw '%{http_code}' "http://frontend-service:8081/user/1" -o /dev/null) -ne 200 ]; do
+            sleep 15;
+          done
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadgenerator-service
+  labels:
+    service: loadgenerator
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8086
+  selector:
+    app: loadgenerator-pod

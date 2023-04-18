@@ -1,13 +1,22 @@
 from flask import Flask
 from waitress import serve
-from lorem_text import lorem
 from process_tilt_ciphersmaug.logging import TiltLogger
-import datetime
+import requests
 from opentelemetry import trace
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+import sqlite3
+
+def initialize_db():
+    db = sqlite3.connect("user.sqlite")
+    cursor = db.cursor()
+    with open("user.sql",mode="r") as f:
+        cursor.executescript(f.read())
+    db.close()
 
 tracer = trace.get_tracer(__name__)
 app = Flask(__name__)
-
+initialize_db()
+RequestsInstrumentor().instrument()
 # Create the tilt Logger
 tl = TiltLogger("TILT",tracer)
 
@@ -15,36 +24,40 @@ tl = TiltLogger("TILT",tracer)
 @app.route('/user/<id>')
 def user_information(id: int):
     address = request_address(id)
-    user_information = get_user_information(id, address)
-    return user_information
+    user_information = get_user_information(id)
+    return user_information | address
 
 @tl.log(concept_name = "Combine User Data", tilt = {
     "data_disclosed": ["firstname","lastname","birthday","address"], 
     "purposes": ["marketing"], 
     "legal_bases": ["gdpr sec 6."]
     }, msg = "Combine User Data")
-def get_user_information(id: int, address):
-    if(int(id)==1):
-        return {
-        "firstname":"ciph",
-        "lastname":"smaug",
-        "birthday": datetime.date(2000,1,1),
-        "description": lorem.sentence()
-        } | address
-    else:
+def get_user_information(id: int):
+    
+    if int(id) > 1000:
         return {}
+    else:
+        db = sqlite3.connect("user.sqlite")
+        result = {}
+        for row in db.execute(f"SELECT * from user WHERE id == {id}"):
+            id,lastname,firstname,email,sex,ip = row
+            result["firstname"]=firstname
+            result["lastname"]=lastname
+            result["birthday"]=ip
+            result["description"]=email
+            break
+        db.close()
+        return result
+    
 
+@tl.log(concept_name = "Request User Address", tilt = {
+    "data_disclosed": ["user.id"], 
+    "purposes": ["marketing"], 
+    "legal_bases": ["gdpr sec 6."]
+    }, msg = "Request User Address")
 def request_address(id: int):
-    if(int(id)==1):
-        return {
-            "address": {
-                "street":"Bundesallee",
-                "number":"1A",
-                "postcode":"12345"
-                }
-            }
-    else:
-        return {}
+    response = requests.get(f"http://address-service/address/{id}")
+    return response.json()
 
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8082)

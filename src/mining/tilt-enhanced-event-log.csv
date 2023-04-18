@@ -1,0 +1,17 @@
+,timestamp,case:concept:name,concept:name,message,tilt:data_disclosed,tilt:purposes,tilt:legal_bases
+0,"2023-04-10,07:32:55.441",0x4c6077d6eb8f431fe313dd982915c169,Combine User Data,Combine User Data,"['firstname', 'lastname', 'birthday', 'address']","['marketing','work']","['gdpr sec 6.','gdpr sec 8']"
+1,"2023-04-10,07:32:56.729",0x788c74bb2e9046285d146b529c200b9f,Combine User Data,Combine User Data,"['firstname', 'lastname', 'birthday', 'address']",['marketing'],['gdpr sec 6.']
+2,"2023-04-10,07:32:56.996",0x889d1a60f663f3756474662821256f5c,Combine User Data,Combine User Data,"['firstname', 'lastname', 'birthday', 'address']",['marketing'],['gdpr sec 6.']
+3,"2023-04-10,07:32:57.393",0xeb123eee4ed12214340e63865fc2018e,Combine User Data,Combine User Data,"['firstname', 'lastname', 'birthday', 'address']",['marketing'],['gdpr sec 6.']
+4,"2023-04-10,07:32:57.673",0xc3d0cec02bbab63ea1c8357433be4c81,Combine User Data,Combine User Data,"['firstname', 'lastname', 'birthday', 'address']",['marketing'],['gdpr sec 6.']
+5,"2023-04-10,07:32:57.921",0x49fdc93d3b5081f11c83aaffae9afed3,Combine User Data,Combine User Data,"['firstname', 'lastname', 'birthday', 'address']",['marketing'],['gdpr sec 6.']
+6,"2023-04-10,07:32:58.267",0x85f17a5be5b42b2ad935c06da394733e,Combine User Data,Combine User Data,"['firstname', 'lastname', 'birthday', 'address']",['marketing'],['gdpr sec 6.']
+7,"2023-04-10,07:32:55.429",0x4c6077d6eb8f431fe313dd982915c169,HelloWorld,Getting User Information,['username'],['marketing'],['gdpr sec 4.']
+8,"2023-04-10,07:32:56.722",0x788c74bb2e9046285d146b529c200b9f,HelloWorld,Getting User Information,['username'],['marketing'],['gdpr sec 4.']
+9,"2023-04-10,07:32:56.989",0x889d1a60f663f3756474662821256f5c,HelloWorld,Getting User Information,['username'],['marketing'],['gdpr sec 4.']
+10,"2023-04-10,07:32:57.386",0xeb123eee4ed12214340e63865fc2018e,HelloWorld,Getting User Information,['username'],['marketing'],['gdpr sec 4.']
+11,"2023-04-10,07:32:57.667",0xc3d0cec02bbab63ea1c8357433be4c81,HelloWorld,Getting User Information,['username'],['marketing'],['gdpr sec 4.']
+12,"2023-04-10,07:32:57.914",0x49fdc93d3b5081f11c83aaffae9afed3,HelloWorld,Getting User Information,['username'],['marketing'],['gdpr sec 4.']
+13,"2023-04-10,07:32:58.260",0x85f17a5be5b42b2ad935c06da394733e,HelloWorld,Getting User Information,['username'],['marketing'],['gdpr sec 4.']
+14,"2023-04-10,07:35:53.339",0xc47a2341b16c4cd4cc60642d4f0ae0ec,Combine User Data,Combine User Data,"['firstname', 'lastname', 'birthday', 'address']",['marketing'],['gdpr sec 6.']
+15,"2023-04-10,07:35:53.333",0xc47a2341b16c4cd4cc60642d4f0ae0ec,HelloWorld,Getting User Information,['username'],['marketing'],['gdpr sec 4.']

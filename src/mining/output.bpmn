@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tilt="mytilturi.com" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" targetNamespace="http://www.signavio.com/bpmn20" exporter="Camunda Modeler" exporterVersion="5.6.0">
+  <bpmn:process id="id212733dc-53b0-408e-a05d-bac3c8f33f49" processType="None" isClosed="false" isExecutable="false">
+    <bpmn:task id="id939798b7-98c9-444e-befc-ba6ab308bf07" name="Combine User Data">
+      <bpmn:extensionElements>
+        <tilt:dataDisclosed _id="-2402903000197690004" category="address">
+          <tilt:purposes purpose="marketing" />
+          <tilt:purposes purpose="work" />
+          <tilt:legalBases reference="gdpr sec 6." />
+          <tilt:legalBases reference="gdpr sec 8" />
+        </tilt:dataDisclosed>
+        <tilt:dataDisclosed _id="-5015391403871419010" category="birthday">
+          <tilt:purposes purpose="marketing" />
+          <tilt:purposes purpose="work" />
+          <tilt:legalBases reference="gdpr sec 6." />
+          <tilt:legalBases reference="gdpr sec 8" />
+        </tilt:dataDisclosed>
+        <tilt:dataDisclosed _id="-1634574267463137870" category="firstname">
+          <tilt:purposes purpose="marketing" />
+          <tilt:purposes purpose="work" />
+          <tilt:legalBases reference="gdpr sec 6." />
+          <tilt:legalBases reference="gdpr sec 8" />
+        </tilt:dataDisclosed>
+        <tilt:dataDisclosed _id="2199174569191559145" category="lastname">
+          <tilt:purposes purpose="marketing" />
+          <tilt:purposes purpose="work" />
+          <tilt:legalBases reference="gdpr sec 6." />
+          <tilt:legalBases reference="gdpr sec 8" />
+        </tilt:dataDisclosed>
+        <tilt:dataDisclosed _id="8322952636207868769" category="address">
+          <tilt:purposes purpose="marketing" />
+          <tilt:legalBases reference="gdpr sec 6." />
+        </tilt:dataDisclosed>
+        <tilt:dataDisclosed _id="-3245182960680739527" category="birthday">
+          <tilt:purposes purpose="marketing" />
+          <tilt:legalBases reference="gdpr sec 6." />
+        </tilt:dataDisclosed>
+        <tilt:dataDisclosed _id="4263124827195725892" category="firstname">
+          <tilt:purposes purpose="marketing" />
+          <tilt:legalBases reference="gdpr sec 6." />
+        </tilt:dataDisclosed>
+        <tilt:dataDisclosed _id="4893262703432687710" category="lastname">
+          <tilt:purposes purpose="marketing" />
+          <tilt:legalBases reference="gdpr sec 6." />
+        </tilt:dataDisclosed>
+      </bpmn:extensionElements>
+      <bpmn:incoming>id334536c2-f34e-4da7-8363-b5e3163dc617</bpmn:incoming>
+      <bpmn:outgoing>id4489c6f4-df14-480d-8a58-74c52adff4fa</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="id0ac6febb-0324-41aa-b027-4fea8e2e1ae9" name="end">
+      <bpmn:incoming>id4489c6f4-df14-480d-8a58-74c52adff4fa</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="ide2308468-a18d-4c59-9fbd-eb0c9559d639" name="start">
+      <bpmn:outgoing>id5192b595-8f9e-47db-a61c-84462f2866c7</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="idc11feca8-15c3-47a2-9c97-325604d9326d" name="HelloWorld">
+      <bpmn:extensionElements>
+        <tilt:dataDisclosed _id="-1716605613969800656" category="username">
+          <tilt:purposes purpose="marketing" />
+          <tilt:legalBases reference="gdpr sec 4." />
+        </tilt:dataDisclosed>
+      </bpmn:extensionElements>
+      <bpmn:incoming>id5192b595-8f9e-47db-a61c-84462f2866c7</bpmn:incoming>
+      <bpmn:outgoing>id334536c2-f34e-4da7-8363-b5e3163dc617</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="id4489c6f4-df14-480d-8a58-74c52adff4fa" name="" sourceRef="id939798b7-98c9-444e-befc-ba6ab308bf07" targetRef="id0ac6febb-0324-41aa-b027-4fea8e2e1ae9" />
+    <bpmn:sequenceFlow id="id5192b595-8f9e-47db-a61c-84462f2866c7" name="" sourceRef="ide2308468-a18d-4c59-9fbd-eb0c9559d639" targetRef="idc11feca8-15c3-47a2-9c97-325604d9326d" />
+    <bpmn:sequenceFlow id="id334536c2-f34e-4da7-8363-b5e3163dc617" name="" sourceRef="idc11feca8-15c3-47a2-9c97-325604d9326d" targetRef="id939798b7-98c9-444e-befc-ba6ab308bf07" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="idbc5a56ae-bb1f-4192-98e3-0de7b2758082" name="diagram">
+    <bpmndi:BPMNPlane id="ida6556012-a71e-4a8e-930f-5784a0ec8175" bpmnElement="id212733dc-53b0-408e-a05d-bac3c8f33f49">
+      <bpmndi:BPMNShape id="id939798b7-98c9-444e-befc-ba6ab308bf07_gui" bpmnElement="id939798b7-98c9-444e-befc-ba6ab308bf07">
+        <omgdc:Bounds x="410" y="80" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="id0ac6febb-0324-41aa-b027-4fea8e2e1ae9_gui" bpmnElement="id0ac6febb-0324-41aa-b027-4fea8e2e1ae9">
+        <omgdc:Bounds x="575" y="95" width="30" height="30" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="580" y="133" width="19" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ide2308468-a18d-4c59-9fbd-eb0c9559d639_gui" bpmnElement="ide2308468-a18d-4c59-9fbd-eb0c9559d639">
+        <omgdc:Bounds x="155" y="95" width="30" height="30" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="159" y="125" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="idc11feca8-15c3-47a2-9c97-325604d9326d_gui" bpmnElement="idc11feca8-15c3-47a2-9c97-325604d9326d" bioc:stroke="#e53935" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#e53935">
+        <omgdc:Bounds x="263" y="80" width="93" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="id4489c6f4-df14-480d-8a58-74c52adff4fa_gui" bpmnElement="id4489c6f4-df14-480d-8a58-74c52adff4fa">
+        <omgdi:waypoint x="530" y="110" />
+        <omgdi:waypoint x="575" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="id5192b595-8f9e-47db-a61c-84462f2866c7_gui" bpmnElement="id5192b595-8f9e-47db-a61c-84462f2866c7">
+        <omgdi:waypoint x="185" y="110" />
+        <omgdi:waypoint x="263" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="id334536c2-f34e-4da7-8363-b5e3163dc617_gui" bpmnElement="id334536c2-f34e-4da7-8363-b5e3163dc617">
+        <omgdi:waypoint x="356" y="110" />
+        <omgdi:waypoint x="410" y="110" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

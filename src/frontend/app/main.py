@@ -25,21 +25,19 @@ tl = TiltLogger("TILT",tracer)
     "legal_bases": ["gdpr sec 4."]
     }, msg = "Getting User Information")
 def user_information(id: int):
-    future_user_info = get_user_information(id)
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        #future_user_info = executor.submit(get_user_information, id)
+        future_user_info = executor.submit(get_user_information, id)
         future_last_access = executor.submit(get_last_access, id)
-    return future_user_info#.result()|future_last_access.result()
+    return future_user_info.result()|future_last_access.result()
 
 def get_user_information(id):
     with tracer.start_as_current_span("GetUserInformation") as user_span:
-        response = requests.get("http://user-service/user/1")
+        response = requests.get(f"http://user-service/user/{id}")
     return response.json()
 
 def get_last_access(id):
-    return {
-        "last_access": datetime.datetime(2010,1,1,1,1)
-    }
+    response = requests.get(f"http://welcome-service/welcome/{id}")
+    return response.json()
 
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8081)

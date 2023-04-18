@@ -1,6 +1,6 @@
 from flask import Flask
 from waitress import serve
-#from process_tilt_ciphersmaug.logging import TiltLogger
+from process_tilt_ciphersmaug.logging import TiltLogger
 from opentelemetry import trace
 import sqlite3
 
@@ -15,19 +15,18 @@ tracer = trace.get_tracer(__name__)
 app = Flask(__name__)
 initialize_db()
 # Create the tilt Logger
-#tl = TiltLogger("TILT",tracer)
+tl = TiltLogger("TILT",tracer)
 @app.route('/address/<id>')
 def address_information(id: int):
     address = get_address(id)
     return address
 
-#@tl.log(concept_name = "Combine User Data", tilt = {
-#    "data_disclosed": ["firstname","lastname","birthday","address"], 
-#    "purposes": ["marketing"], 
-#    "legal_bases": ["gdpr sec 6."]
-#    }, msg = "Combine User Data")
+@tl.log(concept_name = "Gather User Address", tilt = {
+    "data_disclosed": ["address.street","address.number","address.postcode"], 
+    "purposes": ["marketing"], 
+    "legal_bases": ["gdpr sec 6."]
+    }, msg = "Gather User Address")
 def get_address(id: int):
-    
     if int(id) > 1000:
         return {}
     else:

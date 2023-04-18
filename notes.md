@@ -72,3 +72,13 @@ spec:
     pattern /(.*?)/
   </regexp>
 </filter>
+
+Privacy modeling in Enterprise Architectures
+Privacy Kibana Extension
+Privacy Log AI Scan (Similar to a virus scan)
+Transparency
+Linting library & Privacy Annotations in spinx
+
+Automated Audit System for Cloud Systems using batch jobs and complete network mirroring
+ITIL TOGAF Like Privacy Framework
+
