@@ -19,7 +19,7 @@ def process_newsletter(id: int):
 @tl.log(concept_name = "Send Newsletter", tilt = {
     "data_disclosed": ["user.firstname","user.lastname","address.street","address.number","address.postcode"], 
     "purposes": ["newsletter"], 
-    "legal_bases": []
+    "legal_bases": ["GDPR-6-1-a"]
     }, msg = "Send Newsletter")
 def get_newsletter_information(id: int):
     pass

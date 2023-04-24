@@ -32,5 +32,5 @@ manifests:
   rawYaml:
   #- logging-manifests/*
   - devopsguyfluentd/*
-  #- otel-manifests/*
+  - otel-manifests/*
   - deployment.yaml

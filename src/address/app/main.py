@@ -23,8 +23,8 @@ def address_information(id: int):
 
 @tl.log(concept_name = "Gather User Address", tilt = {
     "data_disclosed": ["address.street","address.number","address.postcode"], 
-    "purposes": ["marketing"], 
-    "legal_bases": ["gdpr sec 6."]
+    "purposes": ["personal data access"], 
+    "legal_bases": ["GDPR-6-1-b"]
     }, msg = "Gather User Address")
 def get_address(id: int):
     if int(id) > 1000:

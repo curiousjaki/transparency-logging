@@ -4,7 +4,7 @@ from process_tilt_ciphersmaug.logging import TiltLogger
 import requests
 import datetime
 from opentelemetry import trace
-from opentelemetry.instrumentation.requests import RequestsInstrumentor
+#from opentelemetry.instrumentation.requests import RequestsInstrumentor
 import sqlite3
 
 def initialize_db():
@@ -17,7 +17,7 @@ def initialize_db():
 tracer = trace.get_tracer(__name__)
 app = Flask(__name__)
 initialize_db()
-RequestsInstrumentor().instrument()
+#RequestsInstrumentor().instrument()
 # Create the tilt Logger
 tl = TiltLogger("TILT",tracer)
 
@@ -36,17 +36,18 @@ def welcome_information(id: int):
 @tl.log(concept_name = "Inform Newsletter Service", tilt = {
     "data_disclosed": ["user.firstname","user.lastname","user.birthday","address.street","address.number","address.postcode"], 
     "purposes": ["newsletter"], 
-    "legal_bases": []
+    "legal_bases": ["GDPR-6-1-a"]
     }, msg = "Inform Newsletter Service")
 def send_marketing(id):
-    response = requests.get(f"http://newsletter-service/newsletter/{id}")
-    return response.json()
+    with tracer.start_as_current_span("Inform Newsletter Service"):
+        response = requests.get(f"http://newsletter-service/newsletter/{id}")
+        return response.json()
 
 
 @tl.log(concept_name = "Read Last Login", tilt = {
     "data_disclosed": ["user.id"], 
     "purposes": ["welcome"], 
-    "legal_bases": ["gdpr sec 2."]
+    "legal_bases": ["GDPR-6-1-b"]
     }, msg = "Read Last Login")
 def get_welcome_information(id: int):
     if int(id) > 1000:

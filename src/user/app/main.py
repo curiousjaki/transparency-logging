@@ -3,7 +3,7 @@ from waitress import serve
 from process_tilt_ciphersmaug.logging import TiltLogger
 import requests
 from opentelemetry import trace
-from opentelemetry.instrumentation.requests import RequestsInstrumentor
+#from opentelemetry.instrumentation.requests import RequestsInstrumentor
 import sqlite3
 
 def initialize_db():
@@ -16,7 +16,7 @@ def initialize_db():
 tracer = trace.get_tracer(__name__)
 app = Flask(__name__)
 initialize_db()
-RequestsInstrumentor().instrument()
+#RequestsInstrumentor().instrument()
 # Create the tilt Logger
 tl = TiltLogger("TILT",tracer)
 
@@ -28,9 +28,9 @@ def user_information(id: int):
     return user_information | address
 
 @tl.log(concept_name = "Combine User Data", tilt = {
-    "data_disclosed": ["firstname","lastname","birthday","address"], 
-    "purposes": ["marketing"], 
-    "legal_bases": ["gdpr sec 6."]
+    "data_disclosed": ["user.firstname","user.lastname","user.birthday","address.street","address.postcode","address.number"], 
+    "purposes": ["personal data access"], 
+    "legal_bases": ["GDPR-6-1-b"]
     }, msg = "Combine User Data")
 def get_user_information(id: int):
     
@@ -52,12 +52,13 @@ def get_user_information(id: int):
 
 @tl.log(concept_name = "Request User Address", tilt = {
     "data_disclosed": ["user.id"], 
-    "purposes": ["marketing"], 
-    "legal_bases": ["gdpr sec 6."]
+    "purposes": ["personal data access"], 
+    "legal_bases": ["GDPR-6-1-b"]
     }, msg = "Request User Address")
 def request_address(id: int):
-    response = requests.get(f"http://address-service/address/{id}")
-    return response.json()
+    with tracer.start_as_current_span("Request User Address"):
+        response = requests.get(f"http://address-service/address/{id}")
+        return response.json()
 
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8082)
