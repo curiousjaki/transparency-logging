@@ -10,18 +10,18 @@ from zipfile import ZipFile
 import xmltodict
 import base64
 
-st.title("Transparency Conformance Checking")
+st.title("Transparency Check Dashboard")
 
 
-progress_text = "Please upload a Normative Process Model"
+progress_text = "Please upload a normative process model"
 my_bar = st.progress(0, text=progress_text)
 
 expander = st.expander("File Uploads",expanded=True)
 
 with expander:
-    norm_file = st.file_uploader("Normative Process Model", ".bpmn")
-    discovered_file = st.file_uploader("Discovered Process Model", ".bpmn")
-    log_file = st.file_uploader("Event Log", ".csv")
+    norm_file = st.file_uploader("Normative process model", ".bpmn")
+    discovered_file = st.file_uploader("Discovered process model", ".bpmn")
+    log_file = st.file_uploader("Event log", ".csv")
 
 placeholder = st.empty()
 can_start = False
@@ -30,7 +30,7 @@ if norm_file is not None:
     if discovered_file is not None:
         my_bar.progress(5, text="Please upload the corresponding event log.")
         if log_file is not None:
-            my_bar.progress(10, text="Waiting for User Input")
+            my_bar.progress(10, text="Waiting for start.")
             can_start = True
             #placeholder = st.info("Conformance Checking can now begin.")
 
@@ -40,11 +40,11 @@ df_log_dd = None
 incompliant_category_by_activity = None
 if can_start:
     
-    start = st.button("Start Conformance Checking")
+    start = st.button("Start transparency check")
     if start:
         placeholder.empty()
-        placeholder.info("The compliance checking procedure is currently running")
-        my_bar.progress(5, text="Discovering TILT Fields")
+        placeholder.info("The transparency checking procedure is currently running")
+        my_bar.progress(5, text="Discovering TILT fields")
         combined_df,\
         df_disclosed_delta,\
         df_purpsoes,\
@@ -53,7 +53,7 @@ if can_start:
         df_data_disclosed_normative,\
         df_old_combined = cf.get_data_disclosed_dfs(discovered_file,norm_file)
 
-        my_bar.progress(10, text="Reading Event Log")
+        my_bar.progress(10, text="Reading event log")
         df_el = pd.read_csv(log_file,sep=",")
         df_el["time:timestamp"] = pd.to_datetime(df_el["time:timestamp"],format="%Y-%m-%d %H:%M:%S,%f")
         
@@ -62,47 +62,50 @@ if can_start:
             df_log_dd = disc_f.get_data_disclosed_df(df_el)
             df_log_dd = pd.merge(df_el,df_log_dd[["ident:eid","id"]].rename(columns={"id":"tilt:dataDisclosed:id"}),how="outer",on="ident:eid")
             
-            my_bar.progress(20, text="Checking tilt dataDisclosed compliance (please wait)")
+            my_bar.progress(20, text="Checking tilt dataDisclosed transparency information (please wait)")
             df_log_dd["tilt:isCompliant"] = df_log_dd.apply(lambda x: cf.isCompliant(x,df_disclosed_delta),axis=1)
 
-        my_bar.progress(50, text="Calculating compliance for each activity")
+        my_bar.progress(50, text="Calculating modeled transparency accuracy for each activity")
         df_activity_compliance = df_log_dd.groupby(["case:concept:name","time:timestamp","concept:name"]).apply(lambda x : cf.calcualte_percentage_of_compliance(x))
         
-        my_bar.progress(80, text="Calculating compliance percentage of each case")
+        my_bar.progress(80, text="Calculating modeled transparency accuracy of each case")
         df_cases_compliant = df_activity_compliance.groupby(["case:concept:name"]).apply(lambda x : cf.calcualte_percentage_of_compliance(x,"tilt:percentageCompliant","tilt:case:percentageCompliant")).drop_duplicates(["case:concept:name"])
         #df_cases_compliant["tilt:case:percentageCompliant"].value_counts().sort_index()
 
-        my_bar.progress(90,"Examining incompliant activities")
+        my_bar.progress(90,"Examining non-modeled data disclosed activities")
         incompliant_activities_df = pd.DataFrame(df_activity_compliance[~df_activity_compliance["tilt:isCompliant"]]["tilt:dataDisclosed:id"].value_counts().sort_values(ascending=False)).reset_index().rename(columns={"index":"tilt:dataDisclosed:id","tilt:dataDisclosed:id":"count"})
         incompliant_activity_by_category = pd.DataFrame(pd.merge(incompliant_activities_df,combined_df,left_on="tilt:dataDisclosed:id",right_on="id").groupby(["category","name"])["count"].sum())
         incompliant_category_by_activity = pd.DataFrame(pd.merge(incompliant_activities_df,combined_df,left_on="tilt:dataDisclosed:id",right_on="id").groupby(["name","category"])["count"].sum())
 
         my_bar.progress(100, text="Calculations have finished")
         placeholder.empty()
-        placeholder.success("Completed the compliance checking procedure.")
+        placeholder.success("Completed the transparency checking procedure.")
         #fig = df_cases_compliant["tilt:case:percentageCompliant"].value_counts().apply(lambda x: x/df_cases_compliant["tilt:case:percentageCompliant"].value_counts().sum()).sort_index(ascending=True).plot(kind="bar")
         incompliant_cases_percentage = df_cases_compliant["tilt:case:percentageCompliant"].value_counts().apply(lambda x: x/df_cases_compliant["tilt:case:percentageCompliant"].value_counts().sum()).sort_index(ascending=True)
 
 col1, col2, col3 = st.columns(3)
-tab1, tab2, tab3 = st.tabs(["Compliance percentage per case", "Incompliant Categories","Incompliant Activities"])
+tab1, tab2, tab3 = st.tabs(["Transparency modeling accuracy percentage per case", "Non-modeled transparency by categories","Non-modeled transparency by activities"])
 if df_cases_compliant is not None:
         #st.dataframe(combined_df)
         with col1:
-            st.metric("Overall process compliance","82%")# TODO str(incompliant_cases_percentage.describe()["mean"]*100) +"%")
+            m_df = incompliant_cases_percentage.reset_index()
+            percent = (m_df.iloc[:,0] * m_df.iloc[:,1]).sum()
+            st.metric("Data disclosed modeling accuracy over all cases:",str('{0:.2f}'.format(percent*100)) +"%")
         with col2:
             most_violated = incompliant_activity_by_category.sort_values("count",ascending = False).groupby("category").sum().sort_values("count",ascending=False).reset_index()["category"][0]
             count = incompliant_activity_by_category.sort_values("count",ascending = False).groupby("category").sum().sort_values("count",ascending=False).reset_index()["count"][0]
-            st.metric("Most violated category",str(most_violated),int(count),delta_color="inverse")
+            st.metric("Most non-modeled data category",str(most_violated),int(count),delta_color="inverse")
         with col3:
             most_violated = incompliant_category_by_activity.sort_values("count",ascending = False).groupby("name").sum().sort_values("count",ascending=False).reset_index()["name"][0]
             count = incompliant_category_by_activity.sort_values("count",ascending = False).groupby("name").sum().sort_values("count",ascending=False).reset_index()["count"][0]
-            st.metric("Activity with most violations",str(most_violated),int(count),delta_color="inverse")
+            st.metric("Activity with most non-modeled categories",str(most_violated),int(count),delta_color="inverse")
         with tab1:
-            incompliant_cases_percentage.index.name = "Percent Compliant"
+            incompliant_cases_percentage.index.name = "Percent of fully transparency modeled cases"
             incompliant_cases_percentage = incompliant_cases_percentage.rename(index="Percent of all Cases")
             incompliant_cases_percentage = incompliant_cases_percentage * 100
-            fig = px.bar(incompliant_cases_percentage,title="Case percentage of data disclosed compliance")
+            fig = px.bar(incompliant_cases_percentage,title="Percentage of cases that are accurately dataDisclosed modeled")
             st.plotly_chart(fig)
+            #st.write(m_df)
         with tab2:
             st.dataframe(incompliant_activity_by_category,width=700)
         with tab3:
@@ -142,9 +145,9 @@ if df_cases_compliant is not None:
             bytes = f.read()
             b64 = base64.b64encode(bytes).decode()
             href = f"<a href=\"data:file/zip;base64,{b64}\" download='compliance_checked_bpmn.zip'>\
-                Click to download the compliance checked process model\
+                Click to download the transparency checked process model\
             </a>"
         st.sidebar.markdown(href, unsafe_allow_html=True)
         st.markdown(href, unsafe_allow_html=True)
         placeholder.empty()
-        placeholder.success("Download of the compliance checked process diagrams is ready.")
+        placeholder.success("Download of the transparency checked process diagrams is ready.")

@@ -32,12 +32,12 @@
     <bpmn:laneSet id="LaneSet_1k98p2x">
       <bpmn:lane id="Lane_1l7rycl" name="Frontend">
         <bpmn:flowNodeRef>Activity_1qd6u3s</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_1b8n2mr</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_105nbd0</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_1c72g1f</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_1jfzo6m</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_0h3tdf0</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_16p07iy</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_1jfzo6m</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_105nbd0</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_1b8n2mr</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_1xr426p" name="User">
         <bpmn:flowNodeRef>Activity_0qi94df</bpmn:flowNodeRef>
@@ -54,16 +54,6 @@
         <bpmn:flowNodeRef>Activity_0011d2j</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:parallelGateway id="Gateway_1b8n2mr">
-      <bpmn:incoming>Flow_1ufn0k7</bpmn:incoming>
-      <bpmn:outgoing>Flow_14ksomo</bpmn:outgoing>
-      <bpmn:outgoing>Flow_1l3myde</bpmn:outgoing>
-    </bpmn:parallelGateway>
-    <bpmn:parallelGateway id="Gateway_105nbd0">
-      <bpmn:incoming>Flow_14yt87t</bpmn:incoming>
-      <bpmn:incoming>Flow_1swoqhy</bpmn:incoming>
-      <bpmn:outgoing>Flow_1bpboxk</bpmn:outgoing>
-    </bpmn:parallelGateway>
     <bpmn:task id="Activity_0qi94df" name="Request User Address">
       <bpmn:extensionElements>
         <tilt:dataDisclosed _id="rua.user.id" category="user.id">
@@ -97,6 +87,78 @@
         <bpmn:targetRef>Property_0le4605</bpmn:targetRef>
       </bpmn:dataInputAssociation>
     </bpmn:task>
+    <bpmn:task id="Activity_1qd6u3s" name="Process User Request">
+      <bpmn:extensionElements>
+        <tilt:dataDisclosed _id="pur.id" category="user.id">
+          <tilt:purposes purpose="personal data access" />
+          <tilt:legalBases reference="GDPR-6-1-b" />
+        </tilt:dataDisclosed>
+      </bpmn:extensionElements>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0yeqxkx" sourceRef="Activity_0qi94df" targetRef="Activity_0557tbm" />
+    <bpmn:sequenceFlow id="Flow_1vtho7r" sourceRef="Activity_0557tbm" targetRef="Activity_0cur211" />
+    <bpmn:task id="Activity_1c72g1f" name="Process User Request">
+      <bpmn:extensionElements>
+        <tilt:dataDisclosed _id="pur.user.id" category="user.id">
+          <tilt:purposes purpose="personal data access" />
+          <tilt:legalBases reference="GDPR-6-1-b" />
+        </tilt:dataDisclosed>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1malme6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ufn0k7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0anc6ya" sourceRef="Activity_0h3tdf0" targetRef="Event_16p07iy" />
+    <bpmn:startEvent id="Event_1jfzo6m">
+      <bpmn:extensionElements>
+        <tilt:meta main="true" name="My Company" version="1" language="de" status="inactive" url="testurl" />
+        <tilt:dataProtectionOfficer />
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_1malme6</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_08z3hbl" />
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1malme6" sourceRef="Event_1jfzo6m" targetRef="Activity_1c72g1f" />
+    <bpmn:sequenceFlow id="Flow_1fhayw9" sourceRef="Event_0bbw65o" targetRef="Gateway_1w1hb54" />
+    <bpmn:sequenceFlow id="Flow_13v3c02" sourceRef="Gateway_0wxls6x" targetRef="Activity_0011d2j" />
+    <bpmn:sequenceFlow id="Flow_1s9bnvz" sourceRef="Gateway_0wxls6x" targetRef="Gateway_1w1hb54" />
+    <bpmn:sequenceFlow id="Flow_0ot5kv5" sourceRef="Activity_1do32q0" targetRef="Gateway_0wxls6x" />
+    <bpmn:sendTask id="Activity_0011d2j" name="Inform Newsletter Service">
+      <bpmn:extensionElements>
+        <tilt:dataDisclosed _id="TEST1234" category="test.address">
+          <tilt:purposes purpose="newsletter" />
+          <tilt:purposes purpose="Quatsch" />
+        </tilt:dataDisclosed>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_13v3c02</bpmn:incoming>
+    </bpmn:sendTask>
+    <bpmn:intermediateCatchEvent id="Event_0bbw65o">
+      <bpmn:outgoing>Flow_1fhayw9</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_05v5e3i" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:exclusiveGateway id="Gateway_1w1hb54">
+      <bpmn:incoming>Flow_1s9bnvz</bpmn:incoming>
+      <bpmn:incoming>Flow_1fhayw9</bpmn:incoming>
+      <bpmn:outgoing>Flow_1swoqhy</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_0wxls6x" default="Flow_1s9bnvz">
+      <bpmn:incoming>Flow_0ot5kv5</bpmn:incoming>
+      <bpmn:outgoing>Flow_1s9bnvz</bpmn:outgoing>
+      <bpmn:outgoing>Flow_13v3c02</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Activity_1do32q0" name="Read Last Login">
+      <bpmn:extensionElements>
+        <tilt:dataDisclosed _id="rll.user.id" category="user.id">
+          <tilt:purposes purpose="welcome" />
+          <tilt:legalBases reference="GDPR-6-1-a" />
+        </tilt:dataDisclosed>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_14ksomo</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ot5kv5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:dataStoreReference id="DataStoreReference_1oz09oj">
+      <bpmn:extensionElements>
+        <tilt:sources />
+      </bpmn:extensionElements>
+    </bpmn:dataStoreReference>
     <bpmn:task id="Activity_0cur211" name="Combine User Data">
       <bpmn:extensionElements>
         <tilt:dataDisclosed _id="cud.street" category="address.street">
@@ -127,72 +189,10 @@
       <bpmn:incoming>Flow_1vtho7r</bpmn:incoming>
       <bpmn:outgoing>Flow_14yt87t</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:task id="Activity_1do32q0" name="Read Last Login">
-      <bpmn:extensionElements>
-        <tilt:dataDisclosed _id="rll.user.id" category="user.id">
-          <tilt:purposes purpose="welcome" />
-          <tilt:legalBases reference="GDPR-6-1-a" />
-        </tilt:dataDisclosed>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_14ksomo</bpmn:incoming>
-      <bpmn:outgoing>Flow_0ot5kv5</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:exclusiveGateway id="Gateway_0wxls6x" default="Flow_1s9bnvz">
-      <bpmn:incoming>Flow_0ot5kv5</bpmn:incoming>
-      <bpmn:outgoing>Flow_1s9bnvz</bpmn:outgoing>
-      <bpmn:outgoing>Flow_13v3c02</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="Gateway_1w1hb54">
-      <bpmn:incoming>Flow_1s9bnvz</bpmn:incoming>
-      <bpmn:incoming>Flow_1fhayw9</bpmn:incoming>
-      <bpmn:outgoing>Flow_1swoqhy</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:intermediateCatchEvent id="Event_0bbw65o">
-      <bpmn:outgoing>Flow_1fhayw9</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_05v5e3i" />
-    </bpmn:intermediateCatchEvent>
-    <bpmn:sendTask id="Activity_0011d2j" name="Inform Newsletter Service">
-      <bpmn:extensionElements>
-        <tilt:dataDisclosed _id="TEST1234" category="test.address">
-          <tilt:purposes purpose="newsletter" />
-          <tilt:purposes purpose="Quatsch" />
-        </tilt:dataDisclosed>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_13v3c02</bpmn:incoming>
-    </bpmn:sendTask>
-    <bpmn:task id="Activity_1qd6u3s" name="Process User Request">
-      <bpmn:extensionElements>
-        <tilt:dataDisclosed _id="pur.id" category="user.id">
-          <tilt:purposes purpose="personal data access" />
-          <tilt:legalBases reference="GDPR-6-1-b" />
-        </tilt:dataDisclosed>
-      </bpmn:extensionElements>
-    </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_14ksomo" sourceRef="Gateway_1b8n2mr" targetRef="Activity_1do32q0" />
-    <bpmn:sequenceFlow id="Flow_1l3myde" sourceRef="Gateway_1b8n2mr" targetRef="Activity_0qi94df" />
-    <bpmn:sequenceFlow id="Flow_1swoqhy" sourceRef="Gateway_1w1hb54" targetRef="Gateway_105nbd0" />
-    <bpmn:sequenceFlow id="Flow_14yt87t" sourceRef="Activity_0cur211" targetRef="Gateway_105nbd0" />
-    <bpmn:sequenceFlow id="Flow_0yeqxkx" sourceRef="Activity_0qi94df" targetRef="Activity_0557tbm" />
-    <bpmn:sequenceFlow id="Flow_1vtho7r" sourceRef="Activity_0557tbm" targetRef="Activity_0cur211" />
-    <bpmn:sequenceFlow id="Flow_0ot5kv5" sourceRef="Activity_1do32q0" targetRef="Gateway_0wxls6x" />
-    <bpmn:sequenceFlow id="Flow_1s9bnvz" sourceRef="Gateway_0wxls6x" targetRef="Gateway_1w1hb54" />
-    <bpmn:sequenceFlow id="Flow_13v3c02" sourceRef="Gateway_0wxls6x" targetRef="Activity_0011d2j" />
-    <bpmn:sequenceFlow id="Flow_1fhayw9" sourceRef="Event_0bbw65o" targetRef="Gateway_1w1hb54" />
-    <bpmn:sequenceFlow id="Flow_1ufn0k7" sourceRef="Activity_1c72g1f" targetRef="Gateway_1b8n2mr" />
-    <bpmn:task id="Activity_1c72g1f" name="Process User Request">
-      <bpmn:extensionElements>
-        <tilt:dataDisclosed _id="pur.user.id" category="user.id">
-          <tilt:purposes purpose="personal data access" />
-          <tilt:legalBases reference="GDPR-6-1-b" />
-        </tilt:dataDisclosed>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1malme6</bpmn:incoming>
-    </bpmn:task>
     <bpmn:task id="Activity_0h3tdf0" name="Send Data to User">
       <bpmn:incoming>Flow_1bpboxk</bpmn:incoming>
       <bpmn:outgoing>Flow_0anc6ya</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_1bpboxk" sourceRef="Gateway_105nbd0" targetRef="Activity_0h3tdf0" />
     <bpmn:endEvent id="Event_16p07iy">
       <bpmn:extensionElements>
         <tilt:accessAndDataPortability />
@@ -206,21 +206,22 @@
       <bpmn:incoming>Flow_0anc6ya</bpmn:incoming>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0sk50ax" />
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0anc6ya" sourceRef="Activity_0h3tdf0" targetRef="Event_16p07iy" />
-    <bpmn:startEvent id="Event_1jfzo6m">
-      <bpmn:extensionElements>
-        <tilt:meta main="true" name="My Company" version="1" language="de" status="inactive" url="testurl" />
-        <tilt:dataProtectionOfficer />
-      </bpmn:extensionElements>
-      <bpmn:outgoing>Flow_1malme6</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_08z3hbl" />
-    </bpmn:startEvent>
-    <bpmn:sequenceFlow id="Flow_1malme6" sourceRef="Event_1jfzo6m" targetRef="Activity_1c72g1f" />
-    <bpmn:dataStoreReference id="DataStoreReference_1oz09oj">
-      <bpmn:extensionElements>
-        <tilt:sources />
-      </bpmn:extensionElements>
-    </bpmn:dataStoreReference>
+    <bpmn:parallelGateway id="Gateway_105nbd0">
+      <bpmn:incoming>Flow_14yt87t</bpmn:incoming>
+      <bpmn:incoming>Flow_1swoqhy</bpmn:incoming>
+      <bpmn:outgoing>Flow_1bpboxk</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_1bpboxk" sourceRef="Gateway_105nbd0" targetRef="Activity_0h3tdf0" />
+    <bpmn:sequenceFlow id="Flow_14yt87t" sourceRef="Activity_0cur211" targetRef="Gateway_105nbd0" />
+    <bpmn:sequenceFlow id="Flow_1swoqhy" sourceRef="Gateway_1w1hb54" targetRef="Gateway_105nbd0" />
+    <bpmn:parallelGateway id="Gateway_1b8n2mr">
+      <bpmn:incoming>Flow_1ufn0k7</bpmn:incoming>
+      <bpmn:outgoing>Flow_1l3myde</bpmn:outgoing>
+      <bpmn:outgoing>Flow_14ksomo</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:sequenceFlow id="Flow_1l3myde" sourceRef="Gateway_1b8n2mr" targetRef="Activity_0qi94df" />
+    <bpmn:sequenceFlow id="Flow_14ksomo" sourceRef="Gateway_1b8n2mr" targetRef="Activity_1do32q0" />
+    <bpmn:sequenceFlow id="Flow_1ufn0k7" sourceRef="Activity_1c72g1f" targetRef="Gateway_1b8n2mr" />
   </bpmn:process>
   <bpmn:process id="Process_05pbw89" isExecutable="false">
     <bpmn:subProcess id="Activity_0ofswtg" name="Send Newsletter" />
@@ -228,23 +229,23 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0m9nke8">
       <bpmndi:BPMNShape id="Participant_0p8ou7w_di" bpmnElement="Participant_0p8ou7w" isHorizontal="true">
-        <dc:Bounds x="160" y="180" width="800" height="705" />
+        <dc:Bounds x="160" y="180" width="1020" height="705" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_1vycqw1_di" bpmnElement="Lane_1vycqw1" isHorizontal="true">
-        <dc:Bounds x="190" y="180" width="770" height="260" />
+        <dc:Bounds x="190" y="180" width="990" height="260" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_00vqsb0_di" bpmnElement="Lane_00vqsb0" isHorizontal="true">
-        <dc:Bounds x="190" y="740" width="770" height="145" />
+        <dc:Bounds x="190" y="740" width="990" height="145" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_1xr426p_di" bpmnElement="Lane_1xr426p" isHorizontal="true">
-        <dc:Bounds x="190" y="580" width="770" height="160" />
+        <dc:Bounds x="190" y="580" width="990" height="160" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_1l7rycl_di" bpmnElement="Lane_1l7rycl" isHorizontal="true">
-        <dc:Bounds x="190" y="440" width="770" height="140" />
+        <dc:Bounds x="190" y="440" width="990" height="140" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0we8l6q_di" bpmnElement="Gateway_1b8n2mr">
@@ -358,7 +359,7 @@
         <di:waypoint x="290" y="510" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_0ranpoh_di" bpmnElement="Participant_0ranpoh" isHorizontal="true">
-        <dc:Bounds x="160" y="50" width="800" height="120" />
+        <dc:Bounds x="160" y="50" width="1020" height="120" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_067ozvt_di" bpmnElement="Activity_0ofswtg">
