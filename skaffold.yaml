@@ -35,6 +35,6 @@ build:
 manifests:
   rawYaml:
   #- logging-manifests/*
-  - devopsguyfluentd/*
+  - transparency-manifests/*
   - otel-manifests/*
   - deployment.yaml
