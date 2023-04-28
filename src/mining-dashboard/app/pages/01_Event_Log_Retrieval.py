@@ -11,7 +11,7 @@ st.write("This can be used to retrieve an TILT extended event log from an Elasti
 progress_text = "Ready for retrieval"
 my_bar = st.progress(0, text=progress_text)
 st.code("Production: \n http://elasticsearch.elastic-kibana:9200 \nDevelopment: \n http://localhost:9200")
-host = st.text_input("Enter the available host here:","http://localhost:9200")
+host = st.text_input("Enter the available host here:","http://elasticsearch.elastic-kibana:9200")
 result = st.button("Retrieve from Host")
 
 if result and not combined_df:

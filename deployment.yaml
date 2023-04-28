@@ -224,3 +224,39 @@ spec:
     targetPort: 8086
   selector:
     app: loadgenerator-pod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-deployment
+  labels:
+    app: dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard-pod
+  template:
+    metadata:
+      labels:
+        app: dashboard-pod
+    spec:
+      containers:
+      - name: dashboard-container
+        image: docker.io/ciphersmaug/tilt-dashboard:latest
+        ports:
+        - containerPort: 8501
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-service
+  labels:
+    service: dashboard
+spec:
+  ports:
+  - protocol: TCP
+    port: 8501
+    targetPort: 8501
+  selector:
+    app: dashboard-pod

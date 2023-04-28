@@ -1,3 +1,3 @@
 [theme]
-base="dark"
-wide_mode = True
+base="light"
+wide_mode = true

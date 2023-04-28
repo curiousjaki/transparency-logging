@@ -28,6 +28,10 @@ build:
     context: src/loadgenerator
     docker:
       dockerfile: Dockerfile
+  - image: docker.io/ciphersmaug/tilt-dashboard
+    context: src/mining-dashboard
+    docker:
+      dockerfile: Dockerfile
 manifests:
   rawYaml:
   #- logging-manifests/*
