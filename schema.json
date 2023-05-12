@@ -1,0 +1,104 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/TransparencyEventLog",
+    "definitions": {
+        "TransparencyEventLog": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "time:timestamp": {
+                    "type": "string"
+                },
+                "case:concept:name": {
+                    "type": "string"
+                },
+                "concept:name": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "tilt:dataDisclosed": {
+                    "$ref": "#/definitions/TiltDataDisclosed"
+                }
+            },
+            "required": [
+                "case:concept:name",
+                "concept:name",
+                "message",
+                "tilt:dataDisclosed",
+                "time:timestamp"
+            ],
+            "title": "TransparencyEventLog"
+        },
+        "TiltDataDisclosed": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "category": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "purposes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "legalBases": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "legitimateInterests": {
+                    "type": "array",
+                    "items": {}
+                },
+                "recipients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Recipient"
+                    }
+                },
+                "storage": {
+                    "type": "array",
+                    "items": {}
+                },
+                "nonDisclosure": {
+                    "$ref": "#/definitions/NonDisclosure"
+                }
+            },
+            "required": [
+                "category",
+                "legalBases",
+                "legitimateInterests",
+                "nonDisclosure",
+                "purposes",
+                "recipients",
+                "storage"
+            ],
+            "title": "TiltDataDisclosed"
+        },
+        "NonDisclosure": {
+            "type": "object",
+            "additionalProperties": false,
+            "title": "NonDisclosure"
+        },
+        "Recipient": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "category": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "category"
+            ],
+            "title": "Recipient"
+        }
+    }
+}
