@@ -51,10 +51,10 @@ def modify_by_unused(activity,old_id,bpmn):
         error_data_disclosed["@category"] = "UNUSED:"+error_data_disclosed["@category"]
     element_id = error_element["@id"]
     shape, *n= get_bpmn_element_by_value(bpmn,element_id,k="@bpmnElement")
-    shape["@bioc:stroke"] ="#007600"
+    shape["@bioc:stroke"] ="#FFFF00"
     #shape["@bioc:fill"]="#8728E3"
     #shape["@color:background-color"]="#ffe0b2"
-    shape["@color:border-color"]="#007600"
+    shape["@color:border-color"]="#FFFF00"
     return bpmn
 
 

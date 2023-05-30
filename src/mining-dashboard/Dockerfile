@@ -2,6 +2,7 @@ FROM python:3.9-slim-buster
 WORKDIR /usr/src/app
 COPY requirements.txt ./
 ENV PORT=8501
+RUN apt-get update && apt-get install graphviz -y
 RUN pip install --no-cache-dir -r requirements.txt
 COPY ./app .
 EXPOSE ${PORT}
